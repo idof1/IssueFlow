@@ -1,0 +1,10 @@
+package com.att.tdp.issueflow.dto;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+@Data
+public class DependencyRequest {
+    @NotNull
+    private Long blockedBy;
+}
