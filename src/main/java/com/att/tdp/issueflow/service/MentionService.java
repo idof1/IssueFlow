@@ -29,7 +29,7 @@ public class MentionService {
         List<User> mentionedUsers = new ArrayList<>();
 
         for (String username : mentionedUsernames) {
-            userRepository.findByUsername(username).ifPresent(user -> {
+            userRepository.findByUsernameIgnoreCase(username).ifPresent(user -> {
                 mentionRepository.save(Mention.builder()
                         .commentId(commentId)
                         .userId(user.getId())
