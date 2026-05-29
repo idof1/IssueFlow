@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,12 +28,17 @@ public class UserService {
         if (userRepository.existsByEmail(req.getEmail())) {
             throw new ConflictException("Email already taken: " + req.getEmail());
         }
+        // Password is optional per the README contract. If none is supplied,
+        // generate a random one so the account exists but cannot be logged into.
+        String rawPassword = (req.getPassword() != null && !req.getPassword().isBlank())
+                ? req.getPassword()
+                : UUID.randomUUID().toString();
         User user = User.builder()
                 .username(req.getUsername())
                 .email(req.getEmail())
                 .fullName(req.getFullName())
                 .role(req.getRole())
-                .passwordHash(passwordEncoder.encode(req.getPassword()))
+                .passwordHash(passwordEncoder.encode(rawPassword))
                 .build();
         user = userRepository.save(user);
         auditLogService.log("USER", user.getId(), "CREATE", user.getUsername(), "USER", null);

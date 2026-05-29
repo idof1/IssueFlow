@@ -18,6 +18,8 @@ public class UserRequest {
     @NotNull
     private Role role;
 
-    @NotBlank @Size(min = 6)
+    // Optional: README's create-user contract omits password. When provided it
+    // enables login; when absent the user is created without a usable password.
+    @Size(min = 6)
     private String password;
 }
